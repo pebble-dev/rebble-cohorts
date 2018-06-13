@@ -1,0 +1,115 @@
+{
+  "notes": {
+    "3.11.1": "Enjoy new vibration patterns, improved Pebble Health sleep tracking, and timeline snooze in Time-series watches. Fixed bugs and improved performance for all models. Learn more at blog.getpebble.com.",
+    "3.112-health10": "Sleep algorithm improvements, a couple new views for the Health app, summary activity pin in the timeline.",
+    "4.3": "Bugs? Squashed a bunch. Stability improvements for all watches? Of course. See heart rate zones with compatible 2-Series watches. Unlock Kickstart, a brand new watchface. Update your watch and phone app to 4.3 and learn more at blog.getpebble.com."
+  },
+  "timestamps": {
+    "3.0.2-prf": 1430231686,
+    "3.0.3-prf": 1435167301,
+    "3.2-prf5": 1440968436,
+    "3.11.1": 1459810639,
+    "3.112-health10": 1447170113,
+    "4.0-alpha12": 1469464748,
+    "4.2-ROBERT-mfg9": 1473892327,
+    "4.3": 1479829116
+  },
+  "hardware": {
+    "ev2_4": {
+      "normal": {
+        "version": "3.11.1",
+        "sha-256": "b39310ecf29b3927656da368c10ddc78c2a1eefc5c83c144999ab134c674b7f8"
+      }
+    },
+    "v1_5": {
+      "normal": {
+        "version": "3.11.1",
+        "sha-256": "3bddd00cd35b2a0caca63e648c351acc05a3f96c2cddfd9f0ef0f85f99cc6375"
+      }
+    },
+    "v2_0": {
+      "normal": {
+        "version": "3.11.1",
+        "sha-256": "a805f6b3c1df0c67c72e8b1ae301f85f72c18aa874165a71dca4fb9c2871754a"
+      }
+    },
+    "snowy_evt2": {
+      "recovery": {
+        "version": "3.0.2-prf",
+        "sha-256": "5579978e73db5d57831d4e1b8e3416b66fe94f5f19d3eb3ac49fcd54270935f3"
+      },
+      "normal": {
+        "version": "3.112-health10",
+        "sha-256": "a81d808812a80f63c9dac65befd0d54d0995689fb1f5306b90918c553e902350"
+      }
+    },
+    "snowy_dvt": {
+      "recovery": {
+        "version": "3.0.2-prf",
+        "sha-256": "3338d94af5b97e94fe0e0dee5eddae7ea9c8f299b64070d1d1a692948c651a02"
+      },
+      "normal": {
+        "version": "4.3",
+        "sha-256": "0b7f0566383838c3592c138e69d6121e8a1f449070c7f463ee9c7d8c59db6901"
+      }
+    },
+    "snowy_s3": {
+      "recovery": {
+        "version": "3.0.3-prf",
+        "sha-256": "0e5bd3d327c5180506b20ef33aed1601037df0030683b27d68c16e4836c4def0"
+      },
+      "normal": {
+        "version": "4.3",
+        "sha-256": "7334c6b5adecaa6043ed82239b597039c0adb93257ca27eb4449222e032605c4"
+      }
+    },
+    "spalding_evt": {
+      "recovery": {
+        "version": "3.2-prf5",
+        "sha-256": "f9c2bb857952c034c7122b67f5178a25fcdf9ef8cce3d3bd8c2c8671676958c2"
+      },
+      "normal": {
+        "version": "4.0-alpha12",
+        "sha-256": "6fbe30d6f4dcdd215b630d5477f276117673bfdfe1a264ea134230140c7f40a3"
+      }
+    },
+    "spalding": {
+      "recovery": {
+        "version": "3.2-prf5",
+        "sha-256": "f6d3616b423d32618a1a3615ae8f8d5526941c7b6311be45e4387045c7eb7602"
+      },
+      "normal": {
+        "version": "4.3",
+        "sha-256": "9987fdb3336be15ff795ab8c2a15e7baa7cd4fca18bb86c4ec5b62e3529672f8"
+      }
+    },
+    "robert_evt": {
+      "recovery": {
+        "version": "4.2-ROBERT-mfg9",
+        "sha-256": "47bc9e79fe27170470abdba029541e5c6758cf9ee81271d2adb61dc392f0629a"
+      },
+      "normal": {
+        "version": "4.3",
+        "sha-256": "50b6808804c03e94be3d3383732475de57c0dd0f22faaaa0fb94c2d710121db5"
+      }
+    },
+    "silk_evt": {
+      "normal": {
+        "version": "4.3",
+        "sha-256": "56dbe8dbd220544f078b54865e00a0a5005b2cb8045515f0fa82a4bcbbf538b5"
+      }
+    },
+    "silk": {
+      "normal": {
+        "version": "4.3",
+        "sha-256": "429752047f5d4db12ff506c25800ea4f0fcfe191714ddd21d757b047db6c0f97"
+      }
+    },
+    "bb2": {
+      "normal": {
+        "version": "3.11.1",
+        "sha-256": "b609e04b2c75657461c7952cd24266bfce45170057e97219c1c8a86e34019c93"
+      }
+    }
+  }
+}
