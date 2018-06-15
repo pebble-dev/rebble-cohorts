@@ -1,5 +1,6 @@
 from functools import wraps
 import json
+import os
 
 from flask import Flask, jsonify, request, abort
 import requests
@@ -9,9 +10,8 @@ with open('./config.json') as f:
     fw_config = json.load(f)
 
 
-# TODO: these should actually be configurable.
-app.config['REBBLE_AUTH'] = 'https://auth.rebble.io'
-app.config['FIRMWARE_ROOT'] = 'https://binaries.rebble.io/fw'
+app.config['REBBLE_AUTH'] = os.environ['REBBLE_AUTH']
+app.config['FIRMWARE_ROOT'] = os.environ.get('FIRMWARE_ROOT', 'https://binaries.rebble.io/fw')
 
 
 # TODO: Something like this probably belongs in a common library
@@ -77,3 +77,7 @@ def cohort():
             abort(400)
         response[entry] = generators[entry]()
     return jsonify(response)
+
+@app.route('/heartbeat')
+def heartbeat():
+    return 'ok'
