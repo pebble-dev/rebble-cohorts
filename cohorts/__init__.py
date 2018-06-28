@@ -63,6 +63,10 @@ def generate_fw():
 generators = {
     'pipeline-api': lambda: {'host': 'pipeline-api.rebble.io'},
     'linked-services': lambda: {'enabled_providers': []},
+    'health-insights': lambda: {
+        'url': 'https://binaries.rebble.io/health-insights/v11/insights.pbhi',
+        'version': 11,
+    },
     'fw': generate_fw,
 }
 
