@@ -2,17 +2,23 @@ from functools import wraps
 import json
 import os
 
+import beeline
+from beeline.middleware.flask import HoneyMiddleware
 from flask import Flask, jsonify, request, abort
+from beeline.patch import requests
 import requests
 
 app = Flask(__name__)
 with open('./config.json') as f:
     fw_config = json.load(f)
 
-
+app.config['HONEYCOMB_KEY'] = os.environ.get('HONEYCOMB_KEY', None)
 app.config['REBBLE_AUTH'] = os.environ['REBBLE_AUTH']
 app.config['FIRMWARE_ROOT'] = os.environ.get('FIRMWARE_ROOT', 'https://binaries.rebble.io/fw')
 
+if app.config['HONEYCOMB_KEY']:
+    beeline.init(writekey=app.config['HONEYCOMB_KEY'], dataset='rws', service_name='cohorts')
+    HoneyMiddleware(app)
 
 # TODO: Something like this probably belongs in a common library
 def require_auth(fn):
