@@ -30,7 +30,7 @@ def require_auth(fn):
         result = requests.get(f"{app.config['REBBLE_AUTH']}/api/v1/me", headers={'Authorization': auth})
         if result.status_code != 200:
             abort(401)
-        return fn(result, *args, **kwargs)
+        return fn(result.json(), *args, **kwargs)
     return wrapper
 
 
