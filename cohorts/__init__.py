@@ -30,7 +30,7 @@ def require_auth(fn):
         result = requests.get(f"{app.config['REBBLE_AUTH']}/api/v1/me", headers={'Authorization': auth})
         if result.status_code != 200:
             abort(401)
-        return fn(*args, **kwargs)
+        return fn(result, *args, **kwargs)
     return wrapper
 
 
@@ -55,6 +55,11 @@ def generate_fw():
     mobile_version = request.args['mobileVersion']
     mobile_hardware = request.args['mobileHardware']
     pebble_app_version = request.args['pebbleAppVersion']
+
+    beeline.add_context_field('user.hardware', hardware)
+    beeline.add_context_field('user.mobile_platform', mobile_platform)
+    beeline.add_context_field('user.pebble_app_version', pebble_app_version)
+
     if hardware not in fw_config['hardware']:
         abort(400)
     fw = fw_config['hardware'][hardware]
@@ -79,7 +84,9 @@ generators = {
 
 @app.route('/cohort')
 @require_auth
-def cohort():
+def cohort(user):
+    if 'uid' in user:
+        beeline.add_context_field('user', user['uid'])
     select = request.args['select'].split(',')
     response = {}
     for entry in select:
