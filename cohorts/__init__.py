@@ -17,7 +17,7 @@ app.config['REBBLE_AUTH'] = os.environ['REBBLE_AUTH']
 app.config['FIRMWARE_ROOT'] = os.environ.get('FIRMWARE_ROOT', 'https://binaries.rebble.io/fw')
 
 if app.config['HONEYCOMB_KEY']:
-    beeline.init(writekey=app.config['HONEYCOMB_KEY'], dataset='rws', service_name='cohorts')
+    beeline.init(writekey=app.config['HONEYCOMB_KEY'], dataset='rws', service_name='cohorts', debug=True)
     HoneyMiddleware(app)
 
 # TODO: Something like this probably belongs in a common library
