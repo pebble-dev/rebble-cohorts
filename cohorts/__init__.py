@@ -96,5 +96,6 @@ def cohort(user):
     return jsonify(response)
 
 @app.route('/heartbeat')
+@app.route('/cohorts/heartbeat')
 def heartbeat():
     return 'ok'
