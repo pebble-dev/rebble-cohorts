@@ -1,8 +1,8 @@
 click==6.7
 Flask==1.0.2
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.10.1
 MarkupSafe==1.0
-Werkzeug==0.14.1
-requests==2.19.0
+Werkzeug==0.15.3
+requests==2.12.0
 honeycomb-beeline==2.11.4
