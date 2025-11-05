@@ -2,37 +2,41 @@
   "notes": {
     "3.11.1": "Enjoy new vibration patterns, improved Pebble Health sleep tracking, and timeline snooze in Time-series watches. Fixed bugs and improved performance for all models. Learn more at blog.getpebble.com.",
     "3.112-health10": "Sleep algorithm improvements, a couple new views for the Health app, summary activity pin in the timeline.",
+    "3.13.1-rbl": "Hey Rebbles! Does anybody really know what time it is? This update picks up the latest time zone updates from the last decade.",
     "4.3": "Bugs? Squashed a bunch. Stability improvements for all watches? Of course. See heart rate zones with compatible 2-Series watches. Unlock Kickstart, a brand new watchface. Update your watch and phone app to 4.3 and learn more at blog.getpebble.com.",
-    "4.4.0-rbl": "Hey Rebbles! This update fixes dictation with iOS on the Pebble 2 and Pebble Time Round, and improves iOS dictation reliability on all other watches. Dictation still requires a subscription: auth.rebble.io"
+    "4.4.0-rbl": "Hey Rebbles! This update fixes dictation with iOS on the Pebble 2 and Pebble Time Round, and improves iOS dictation reliability on all other watches. Dictation still requires a subscription: auth.rebble.io",
+    "4.4.1-rbl": "Hey Rebbles! Does anybody really know what time it is? This update picks up the latest time zone updates from the last decade."
   },
   "timestamps": {
     "3.0.2-prf": 1430231686,
     "3.0.3-prf": 1435167301,
     "3.2-prf5": 1440968436,
     "3.11.1": 1459810639,
+    "3.13.1": 1759124016,
     "3.112-health10": 1447170113,
     "4.0-alpha12": 1469464748,
     "4.2-ROBERT-mfg9": 1473892327,
     "4.3": 1479829116,
-    "4.4.0-rbl": 1530923714
+    "4.4.0-rbl": 1530923714,
+    "4.4.1-rbl": 1759124016,
   },
   "hardware": {
     "ev2_4": {
       "normal": {
-        "version": "3.11.1",
-        "sha-256": "b39310ecf29b3927656da368c10ddc78c2a1eefc5c83c144999ab134c674b7f8"
+        "version": "3.13.1",
+        "sha-256": "e7c3031a06022bdfaeaab84d155001add8de475fd74590d46618531cc693e0da"
       }
     },
     "v1_5": {
       "normal": {
-        "version": "3.11.1",
-        "sha-256": "3bddd00cd35b2a0caca63e648c351acc05a3f96c2cddfd9f0ef0f85f99cc6375"
+        "version": "3.13.1",
+        "sha-256": "a7edb6fa5e0a047821f8e792d4200132412c376b45f13562d8edf8dc4c4b9da7"
       }
     },
     "v2_0": {
       "normal": {
-        "version": "3.11.1",
-        "sha-256": "a805f6b3c1df0c67c72e8b1ae301f85f72c18aa874165a71dca4fb9c2871754a"
+        "version": "3.13.1",
+        "sha-256": "c02ceb03f763df64847fb8e5edbbed92d92089fdb83c51e3461318510adbe293"
       }
     },
     "snowy_evt2": {
@@ -51,8 +55,8 @@
         "sha-256": "3338d94af5b97e94fe0e0dee5eddae7ea9c8f299b64070d1d1a692948c651a02"
       },
       "normal": {
-        "version": "4.4.0-rbl",
-        "sha-256": "8776587a49fe2f7364abeae21d5e941e9a6e7b2d517533676db22024ba22d0d3"
+        "version": "4.4.1-rbl",
+        "sha-256": "a577c149eb00448f020839ade5a70d78738650ebd004a8f0c6a4dd92eac12647"
       }
     },
     "snowy_s3": {
@@ -61,8 +65,8 @@
         "sha-256": "0e5bd3d327c5180506b20ef33aed1601037df0030683b27d68c16e4836c4def0"
       },
       "normal": {
-        "version": "4.4.0-rbl",
-        "sha-256": "50932d80dc818dba18a78bcac2bf52879c45880e8a229de260838470bf5aee73"
+        "version": "4.4.1-rbl",
+        "sha-256": "fede8308653b55aa77137549ec742e872a7b2644d54157ffd55b73b8ac31ac08"
       }
     },
     "spalding_evt": {
@@ -81,8 +85,8 @@
         "sha-256": "f6d3616b423d32618a1a3615ae8f8d5526941c7b6311be45e4387045c7eb7602"
       },
       "normal": {
-        "version": "4.4.0-rbl",
-        "sha-256": "a8b8d62663a43745d5669ef8103aa6d9566a4895212582f47cf3fe9a3eb0383a"
+        "version": "4.4.1-rbl",
+        "sha-256": "a99325a6c98ebd48718fcf8ff938819582355a280570976a79ddbe900710b0e1"
       }
     },
     "robert_evt": {
@@ -103,8 +107,8 @@
     },
     "silk": {
       "normal": {
-        "version": "4.4.0-rbl",
-        "sha-256": "f290e82987a358657ca29fc2f0de5a2e4b6456eef6056c176caa1540a80738db"
+        "version": "4.4.1-rbl",
+        "sha-256": "812644283c45be2440d294aec518f2a3cb6c5fce83d566b2bc299516fb8779f2"
       }
     },
     "bb2": {
