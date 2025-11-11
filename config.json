@@ -3,6 +3,7 @@
     "3.11.1": "Enjoy new vibration patterns, improved Pebble Health sleep tracking, and timeline snooze in Time-series watches. Fixed bugs and improved performance for all models. Learn more at blog.getpebble.com.",
     "3.112-health10": "Sleep algorithm improvements, a couple new views for the Health app, summary activity pin in the timeline.",
     "3.13.1-rbl": "Hey Rebbles! Does anybody really know what time it is? This update picks up the latest time zone updates from the last decade.",
+    "3.13.2-rbl": "Hello again, Rebbles! Time is like a liquid in our hands. This update fixes daylight savings time in Ireland (oops!).",
     "4.3": "Bugs? Squashed a bunch. Stability improvements for all watches? Of course. See heart rate zones with compatible 2-Series watches. Unlock Kickstart, a brand new watchface. Update your watch and phone app to 4.3 and learn more at blog.getpebble.com.",
     "4.4.0-rbl": "Hey Rebbles! This update fixes dictation with iOS on the Pebble 2 and Pebble Time Round, and improves iOS dictation reliability on all other watches. Dictation still requires a subscription: auth.rebble.io",
     "4.4.1-rbl": "Hey Rebbles! Does anybody really know what time it is? This update picks up the latest time zone updates from the last decade.",
