@@ -7,7 +7,9 @@
     "4.3": "Bugs? Squashed a bunch. Stability improvements for all watches? Of course. See heart rate zones with compatible 2-Series watches. Unlock Kickstart, a brand new watchface. Update your watch and phone app to 4.3 and learn more at blog.getpebble.com.",
     "4.4.0-rbl": "Hey Rebbles! This update fixes dictation with iOS on the Pebble 2 and Pebble Time Round, and improves iOS dictation reliability on all other watches. Dictation still requires a subscription: auth.rebble.io",
     "4.4.1-rbl": "Hey Rebbles! Does anybody really know what time it is? This update picks up the latest time zone updates from the last decade.",
-    "4.4.2-rbl": "Hello again, Rebbles! Time is like a liquid in our hands. This update fixes daylight savings time in Ireland (oops!)."
+    "4.4.2-rbl": "Hello again, Rebbles! Time is like a liquid in our hands. This update fixes daylight savings time in Ireland (oops!).",
+    "3.13.3-rbl": "Sigh. It's me again, Rebbles. I think I definitely got the time zone database right this time, in both Ireland and South America.",
+    "4.4.3-rbl": "Sigh. It's me again, Rebbles. I think I definitely got the time zone database right this time, in both Ireland and South America."
   },
   "timestamps": {
     "3.0.2-prf": 1430231686,
@@ -22,25 +24,27 @@
     "4.3": 1479829116,
     "4.4.0-rbl": 1530923714,
     "4.4.1-rbl": 1759124016,
-    "4.4.2-rbl": 1762737948
+    "4.4.2-rbl": 1762737948,
+    "3.13.3-rbl": 1762930488,
+    "4.4.3-rbl": 1762930476
   },
   "hardware": {
     "ev2_4": {
       "normal": {
-        "version": "3.13.2-rbl",
-        "sha-256": "d83ac922ca28a4b64f4aded7d6bbdb45f875c503bb8f0330d7a7043bdbeafad8"
+        "version": "3.13.3-rbl",
+        "sha-256": "8c0199f980cd7cdd83388edf5617081f30258e5e98a4aef314430ffeb4aed2c4"
       }
     },
     "v1_5": {
       "normal": {
-        "version": "3.13.2-rbl",
-        "sha-256": "4a03f598b41706eb71320b574d6d0f45f0e8267af5c3f10156d05276c7804f09"
+        "version": "3.13.3-rbl",
+        "sha-256": "c7a6c17b90d83ea5fb34043a0cff547671c51f9c61bf8ae6621a8613d616086e"
       }
     },
     "v2_0": {
       "normal": {
-        "version": "3.13.2-rbl",
-        "sha-256": "35bfc68c5e8a90d3d360c4d39374502e3e7e7b4335af60a5a545db99c8b86a44"
+        "version": "3.13.3-rbl",
+        "sha-256": "30d09f93afe8c5d067c8d5877c12911ad272455c5645c33ea7bd94578ccd391e"
       }
     },
     "snowy_evt2": {
@@ -59,8 +63,8 @@
         "sha-256": "3338d94af5b97e94fe0e0dee5eddae7ea9c8f299b64070d1d1a692948c651a02"
       },
       "normal": {
-        "version": "4.4.2-rbl",
-        "sha-256": "b90ba8a04117672f264d04f01f4249bc91a717616c5dbd60e87411375d9090f8"
+        "version": "4.4.3-rbl",
+        "sha-256": "68f45beeb6b6e6a3c744577d5a1638c133fbd453105fe1ff3915d418784159e9"
       }
     },
     "snowy_s3": {
@@ -69,8 +73,8 @@
         "sha-256": "0e5bd3d327c5180506b20ef33aed1601037df0030683b27d68c16e4836c4def0"
       },
       "normal": {
-        "version": "4.4.2-rbl",
-        "sha-256": "08b40f89fb6040c66e33777a0b76ee2322e73a019ebfd901da88109257185b82"
+        "version": "4.4.3-rbl",
+        "sha-256": "1dde5b3b2b5444b15337a62f21790a814cceff72fb214200bfdb6fdf305d3c05"
       }
     },
     "spalding_evt": {
@@ -89,8 +93,8 @@
         "sha-256": "f6d3616b423d32618a1a3615ae8f8d5526941c7b6311be45e4387045c7eb7602"
       },
       "normal": {
-        "version": "4.4.2-rbl",
-        "sha-256": "0e02cac0df35f3854008e69af76cb4115d5ee1ce99f8821a5a8071b10dfc15a3"
+        "version": "4.4.3-rbl",
+        "sha-256": "968a9f25aaa342d3f656919f08458c524304424273943a3b9ceb0d1cce0fe35d"
       }
     },
     "robert_evt": {
@@ -111,8 +115,8 @@
     },
     "silk": {
       "normal": {
-        "version": "4.4.2-rbl",
-        "sha-256": "35cb401117239bd925237f2366931b7189cd8cebfab13cad45d33269ba5ab1e1"
+        "version": "4.4.3-rbl",
+        "sha-256": "69baa702c255031fb29a8fb4f99db852b586253de8ee5a5765355538c862a78a"
       }
     },
     "bb2": {
