@@ -6,14 +6,13 @@ import beeline
 from beeline.middleware.flask import HoneyMiddleware
 from flask import Flask, jsonify, request, abort
 from beeline.patch import requests
-import requests
 
 app = Flask(__name__)
 with open("./config.json") as f:
     fw_config = json.load(f)
 
-app.config["HONEYCOMB_KEY"] = os.environ.get("HONEYCOMB_KEY", None)
-app.config["REBBLE_AUTH"] = os.environ["REBBLE_AUTH"]
+app.config["HONEYCOMB_KEY"] = os.environ.get("HONEYCOMB_KEY")
+app.config["REBBLE_AUTH"] = os.environ.get("REBBLE_AUTH")
 app.config["FIRMWARE_ROOT"] = os.environ.get("FIRMWARE_ROOT", "https://binaries.rebble.io/fw")
 
 if app.config["HONEYCOMB_KEY"]:
@@ -26,10 +25,9 @@ def optional_auth(fn):
     def wrapper(*args, **kwargs):
         auth = request.headers.get("Authorization")
         user = None
-        if auth is not None:
-            result = requests.get(
-                f"{app.config['REBBLE_AUTH']}/api/v1/me", headers={"Authorization": auth}
-            )
+        rebble_auth_host = app.config["REBBLE_AUTH"]
+        if auth and rebble_auth_host is not None:
+            result = requests.get(f"{rebble_auth_host}/api/v1/me", headers={"Authorization": auth})
             if result.status_code != 200:
                 abort(401)
             user = result.json()
