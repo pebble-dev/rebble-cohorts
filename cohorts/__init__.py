@@ -20,17 +20,17 @@ if app.config['HONEYCOMB_KEY']:
     beeline.init(writekey=app.config['HONEYCOMB_KEY'], dataset='rws', service_name='cohorts')
     HoneyMiddleware(app)
 
-# TODO: Something like this probably belongs in a common library
-def require_auth(fn):
+def optional_auth(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         auth = request.headers.get('Authorization')
-        if auth is None:
-            abort(401)
-        result = requests.get(f"{app.config['REBBLE_AUTH']}/api/v1/me", headers={'Authorization': auth})
-        if result.status_code != 200:
-            abort(401)
-        return fn(result.json(), *args, **kwargs)
+        user = None
+        if auth is not None:
+            result = requests.get(f"{app.config['REBBLE_AUTH']}/api/v1/me", headers={'Authorization': auth})
+            if result.status_code != 200:
+                abort(401)
+            user = result.json()
+        return fn(user, *args, **kwargs)
     return wrapper
 
 
@@ -83,9 +83,9 @@ generators = {
 
 
 @app.route('/cohort')
-@require_auth
+@optional_auth
 def cohort(user):
-    if 'uid' in user:
+    if user and 'uid' in user:
         beeline.add_context_field('user', user['uid'])
     select = request.args['select'].split(',')
     response = {}
