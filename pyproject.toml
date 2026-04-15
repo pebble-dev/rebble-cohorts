@@ -15,5 +15,13 @@ dependencies = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.ruff]
+line-length = 100
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.10",
+]
+
 [project.scripts]
 debug_server = "serve_debug:main"
