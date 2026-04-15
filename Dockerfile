@@ -1,5 +1,5 @@
-FROM python:3.6-alpine
+FROM ghcr.io/astral-sh/uv:alpine3.23
 ADD . /code
 WORKDIR /code
-RUN pip install -r requirements.txt
-CMD ["python", "serve_debug.py"]
+RUN uv sync --locked --no-dev
+CMD ["uv", "run", "python", "serve_debug.py"]
