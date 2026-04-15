@@ -1,6 +1,5 @@
-FROM python:3.6-alpine
-RUN pip install gunicorn
+FROM ghcr.io/astral-sh/uv:alpine3.23
 ADD . /code
 WORKDIR /code
-RUN pip install -r requirements.txt
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 cohorts:app
+RUN uv sync --locked --no-dev
+CMD uv run gunicorn --bind :$PORT --workers 1 --threads 8 cohorts:app
