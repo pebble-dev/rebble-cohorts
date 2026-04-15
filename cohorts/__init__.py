@@ -1,6 +1,8 @@
 from functools import wraps
-import json
+import logging
 import os
+
+logging.basicConfig(level=logging.INFO)
 
 import beeline
 from beeline.middleware.flask import HoneyMiddleware
@@ -8,13 +10,17 @@ from flask import Flask, jsonify, request, abort
 from beeline.patch import requests
 import requests
 
+from . import firmware_fetcher
+
 app = Flask(__name__)
-with open('./config.json') as f:
-    fw_config = json.load(f)
 
 app.config['HONEYCOMB_KEY'] = os.environ.get('HONEYCOMB_KEY', None)
 app.config['REBBLE_AUTH'] = os.environ['REBBLE_AUTH']
 app.config['FIRMWARE_ROOT'] = os.environ.get('FIRMWARE_ROOT', 'https://binaries.rebble.io/fw')
+
+fw_config = firmware_fetcher.FirmwareConfig(app.config['FIRMWARE_ROOT'])
+if os.environ.get('DISABLE_FIRMWARE_FETCHER') != '1':
+    firmware_fetcher.start(fw_config)
 
 if app.config['HONEYCOMB_KEY']:
     beeline.init(writekey=app.config['HONEYCOMB_KEY'], dataset='rws', service_name='cohorts')
@@ -34,17 +40,15 @@ def optional_auth(fn):
     return wrapper
 
 
-def build_fw_block(hw, kind):
-    info = fw_config['hardware'][hw][kind]
+def build_fw_block(config, hw, kind):
+    info = config['hardware'][hw][kind]
     version = info['version']
-    sha256 = info['sha-256']
-    timestamp = fw_config['timestamps'][version]
     return {
-        'url': f"{app.config['FIRMWARE_ROOT']}/{hw}/Pebble-{version}-{hw}.pbz",
-        'sha-256': sha256,
+        'url': info['url'],
+        'sha-256': info['sha-256'],
         'friendlyVersion': f"v{version}",
-        'timestamp': timestamp,
-        'notes': fw_config['notes'].get(version, f"v{version}")
+        'timestamp': config['timestamps'][version],
+        'notes': config['notes'].get(version, f"v{version}")
     }
 
 
@@ -60,14 +64,15 @@ def generate_fw():
     beeline.add_context_field('user.mobile_platform', mobile_platform)
     beeline.add_context_field('user.pebble_app_version', pebble_app_version)
 
-    if hardware not in fw_config['hardware']:
+    config = fw_config.get()
+    if hardware not in config['hardware']:
         abort(400)
-    fw = fw_config['hardware'][hardware]
+    fw = config['hardware'][hardware]
     response = {}
     if 'normal' in fw:
-        response['normal'] = build_fw_block(hardware, 'normal')
+        response['normal'] = build_fw_block(config, hardware, 'normal')
     if 'recovery' in fw:
-        response['recovery'] = build_fw_block(hardware, 'recovery')
+        response['recovery'] = build_fw_block(config, hardware, 'recovery')
     return response
 
 
