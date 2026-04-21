@@ -33,6 +33,10 @@ def _latest_firmware(hardware, kind):
     )
 
 
+def _all_firmware():
+    return Firmware.query.order_by(Firmware.kind, Firmware.timestamp.desc()).all()
+
+
 FW_BEELINE_FIELDS = {
     "mobilePlatform": "user.mobile_platform",
     "mobileVersion": "user.mobile_version",
@@ -67,6 +71,12 @@ def generate_fw():
     return response
 
 
+def generate_fw_all():
+    _add_fw_beeline_context()
+    response = [row.to_json(archival=True) for row in _all_firmware()]
+    return response
+
+
 generators = {
     "pipeline-api": lambda: {"host": "pipeline-api.rebble.io"},
     "linked-services": lambda: {"enabled_providers": []},
@@ -75,6 +85,7 @@ generators = {
         "version": 11,
     },
     "fw": generate_fw,
+    "fw-all": generate_fw_all,
 }
 
 

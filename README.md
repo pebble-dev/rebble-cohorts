@@ -1,5 +1,7 @@
 # rebble-cohorts
-cohorts.rebble.io: The Rebble cohorts API
+cohorts.rebble.io: The Rebble cohorts API. It handles firmware delivery.
+
+For archival, use `/cohort?select=fw-all`, which returns a list of all stored firmware.
 
 ## Configuration
 

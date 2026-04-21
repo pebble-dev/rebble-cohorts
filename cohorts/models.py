@@ -16,14 +16,18 @@ class Firmware(db.Model):
     timestamp = db.Column(db.Integer, nullable=False)
     notes = db.Column(db.Text, nullable=True)
 
-    def to_json(self):
-        return {
+    def to_json(self, archival: bool = False):
+        result = {
             "url": self.url,
             "sha-256": self.sha256,
             "friendlyVersion": self.version,
             "timestamp": self.timestamp,
             "notes": self.notes if self.notes else self.version,
         }
+        if archival:
+            result["kind"] = self.kind
+            result["hardware"] = self.hardware
+        return result
 
 
 db.Index(
