@@ -41,13 +41,21 @@ FW_BEELINE_FIELDS = {
 }
 
 
-def generate_fw(kinds=("normal",)):
-    hardware = request.args["hardware"]
-    beeline.add_context_field("user.hardware", hardware)
+def _add_fw_beeline_context(hardware: str | None = None):
+    if hardware:
+        beeline.add_context_field("user.hardware", hardware)
     for arg_name, field_name in FW_BEELINE_FIELDS.items():
         value = request.args.get(arg_name)
         if value is not None:
             beeline.add_context_field(field_name, value)
+
+
+def generate_fw():
+    include_recovery = request.args.get("includeRecovery") == "true"
+    kinds = ("normal", "recovery") if include_recovery else ("normal",)
+
+    hardware = request.args["hardware"]
+    _add_fw_beeline_context(hardware)
 
     response = {}
     for kind in kinds:
@@ -59,12 +67,6 @@ def generate_fw(kinds=("normal",)):
     return response
 
 
-def _fw_generator():
-    include_recovery = request.args.get("includeRecovery") == "true"
-    kinds = ("normal", "recovery") if include_recovery else ("normal",)
-    return generate_fw(kinds=kinds)
-
-
 generators = {
     "pipeline-api": lambda: {"host": "pipeline-api.rebble.io"},
     "linked-services": lambda: {"enabled_providers": []},
@@ -72,7 +74,7 @@ generators = {
         "url": "https://binaries.rebble.io/health-insights/v11/insights.pbhi",
         "version": 11,
     },
-    "fw": _fw_generator,
+    "fw": generate_fw,
 }
 
 
