@@ -33,17 +33,21 @@ def _latest_firmware(hardware, kind):
     )
 
 
-def generate_fw(kinds=("normal",)):
-    # pull these all out for reference even though we don't use them all right now.
-    hardware = request.args["hardware"]
-    mobile_platform = request.args["mobilePlatform"]
-    mobile_version = request.args["mobileVersion"]
-    mobile_hardware = request.args["mobileHardware"]
-    pebble_app_version = request.args["pebbleAppVersion"]
+FW_BEELINE_FIELDS = {
+    "mobilePlatform": "user.mobile_platform",
+    "mobileVersion": "user.mobile_version",
+    "mobileHardware": "user.mobile_hardware",
+    "pebbleAppVersion": "user.pebble_app_version",
+}
 
+
+def generate_fw(kinds=("normal",)):
+    hardware = request.args["hardware"]
     beeline.add_context_field("user.hardware", hardware)
-    beeline.add_context_field("user.mobile_platform", mobile_platform)
-    beeline.add_context_field("user.pebble_app_version", pebble_app_version)
+    for arg_name, field_name in FW_BEELINE_FIELDS.items():
+        value = request.args.get(arg_name)
+        if value is not None:
+            beeline.add_context_field(field_name, value)
 
     response = {}
     for kind in kinds:
