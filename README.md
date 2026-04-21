@@ -28,6 +28,28 @@ docker compose exec app uv run flask import_json  # one-shot seed from config.js
 
 The API is exposed on http://localhost:5000. Postgres data persists in the `cohorts-pg-data` named volume, run `docker compose down -v` if you want a fresh database.
 
+### Optional: fake S3 for upload testing
+
+The `s3` compose profile brings up a local MinIO container plus a one-shot sidecar that pre-creates a `cohorts-binaries` bucket, so the `fetch_firmware` upload path can be exercised without real S3 credentials:
+
+```
+docker compose --profile s3 up -d
+```
+
+Admin console at http://localhost:59001 (user `cohorts`, pass `cohortscohorts`). The S3 API itself is only reachable from inside the compose network at `http://s3:9000` — it is not forwarded to the host.
+
+To point `fetch_firmware` at it, export the matching env on the host before bringing the stack up (or `docker compose --profile s3 restart app` to pick up changes), then run the command as usual:
+
+```
+export AWS_ACCESS_KEY=cohorts AWS_SECRET_KEY=cohortscohorts
+export S3_BUCKET=cohorts-binaries S3_ENDPOINT=http://s3:9000
+export MEMFAULT_TOKEN=<your key>
+docker compose --profile s3 restart app
+docker compose --profile s3 exec app uv run flask fetch_firmware
+```
+
+The MinIO bucket contents persist in the `cohorts-s3-data` named volume — `docker compose down -v` clears them along with Postgres.
+
 ## Firmware data
 
 Firmware rows live in the `firmwares` table, keyed by `(hardware, kind, version)`. Multiple versions per `(hardware, kind)` are allowed so rollback works by submitting an older version with a newer timestamp — `/cohort?select=fw` always returns the latest row per requested kind by `timestamp` descending.
