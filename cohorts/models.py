@@ -20,9 +20,9 @@ class Firmware(db.Model):
         return {
             "url": self.url,
             "sha-256": self.sha256,
-            "friendlyVersion": f"v{self.version}",
+            "friendlyVersion": self.version,
             "timestamp": self.timestamp,
-            "notes": self.notes if self.notes else f"v{self.version}",
+            "notes": self.notes if self.notes else self.version,
         }
 
 
