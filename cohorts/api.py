@@ -32,7 +32,15 @@ def optional_auth(fn):
     return wrapper
 
 
-def generate_fw():
+def _latest_firmware(hardware, kind):
+    return (
+        Firmware.query.filter_by(hardware=hardware, kind=kind)
+        .order_by(Firmware.timestamp.desc())
+        .first()
+    )
+
+
+def generate_fw(kinds=("normal",)):
     # pull these all out for reference even though we don't use them all right now.
     hardware = request.args["hardware"]
     mobile_platform = request.args["mobilePlatform"]
@@ -44,18 +52,20 @@ def generate_fw():
     beeline.add_context_field("user.mobile_platform", mobile_platform)
     beeline.add_context_field("user.pebble_app_version", pebble_app_version)
 
-    rows = (
-        Firmware.query.filter_by(hardware=hardware)
-        .order_by(Firmware.kind, Firmware.timestamp.desc())
-        .all()
-    )
-    if not rows:
+    response = {}
+    for kind in kinds:
+        row = _latest_firmware(hardware, kind)
+        if row is not None:
+            response[kind] = row.to_json()
+    if not response:
         abort(400)
+    return response
 
-    latest = {}
-    for row in rows:
-        latest.setdefault(row.kind, row)
-    return {kind: row.to_json() for kind, row in latest.items()}
+
+def _fw_generator():
+    include_recovery = request.args.get("includeRecovery") == "true"
+    kinds = ("normal", "recovery") if include_recovery else ("normal",)
+    return generate_fw(kinds=kinds)
 
 
 generators = {
@@ -65,7 +75,7 @@ generators = {
         "url": "https://binaries.rebble.io/health-insights/v11/insights.pbhi",
         "version": 11,
     },
-    "fw": generate_fw,
+    "fw": _fw_generator,
 }
 
 
