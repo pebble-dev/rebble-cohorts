@@ -5,6 +5,7 @@ description = "The Rebble cohorts API"
 readme = "README.md"
 requires-python = "~=3.14.0"
 dependencies = [
+    "boto3>=1.35.0",
     # Beeline requires flask <2.4 https://github.com/honeycombio/beeline-python/issues/300
     "flask~=2.3",
     "flask-migrate>=4.1.0",
