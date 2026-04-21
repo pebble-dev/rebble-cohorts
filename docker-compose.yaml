@@ -21,14 +21,14 @@ services:
       # Passed through from the host so operators can invoke `flask fetch_firmware`
       # via `docker compose exec`. Unset on the host -> unset in the container.
       MEMFAULT_TOKEN: ${MEMFAULT_TOKEN:-}
-      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
-      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
-      S3_BUCKET: ${S3_BUCKET:-}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-cohorts}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-cohortscohorts}
+      S3_BUCKET: ${S3_BUCKET:-cohorts-binaries}
       S3_PATH: ${S3_PATH:-fw/}
-      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://s3:9000}
       FIRMWARE_ROOT: ${FIRMWARE_ROOT:-https://binaries.rebble.io/fw}
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     volumes:
       - .:/code
       - /code/.venv
@@ -37,5 +37,37 @@ services:
         condition: service_healthy
     command: sh -c "uv run flask db upgrade && uv run python serve_debug.py"
 
+  # Optional: `docker compose --profile s3 up` brings up a local S3-compatible
+  # MinIO plus a one-shot sidecar that creates the `cohorts-binaries` bucket.
+  # The S3 API is reachable inside the compose network at http://s3:9000 and
+  # is intentionally not forwarded to the host; the admin console is forwarded
+  # at http://localhost:59001.
+  s3:
+    image: minio/minio:latest
+    profiles: ["s3"]
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: cohorts
+      MINIO_ROOT_PASSWORD: cohortscohorts
+    ports:
+      - "127.0.0.1:59001:9001"
+    volumes:
+      - cohorts-s3-data:/data
+
+  s3-init:
+    image: minio/mc:latest
+    profiles: ["s3"]
+    depends_on:
+      - s3
+    entrypoint: >
+      sh -c "
+        until mc alias set local http://s3:9000 cohorts cohortscohorts >/dev/null 2>&1; do sleep 1; done;
+        mc mb --ignore-existing local/cohorts-binaries;
+        mc anonymous set download local/cohorts-binaries;
+        echo 'bucket ready: cohorts-binaries';
+      "
+    restart: "no"
+
 volumes:
   cohorts-pg-data:
+  cohorts-s3-data:
