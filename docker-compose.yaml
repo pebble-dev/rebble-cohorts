@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: cohorts
+      POSTGRES_PASSWORD: cohorts
+      POSTGRES_DB: cohorts
+    volumes:
+      - cohorts-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cohorts -d cohorts"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://cohorts:cohorts@db:5432/cohorts
+      FLASK_APP: cohorts
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+      - /code/.venv
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "uv run flask db upgrade && uv run python serve_debug.py"
+
+volumes:
+  cohorts-pg-data:
