@@ -42,11 +42,12 @@ def import_json_command():
     count = 0
     for hardware, variants in fw_config["hardware"].items():
         for kind, entry in variants.items():
-            version = entry["version"]
+            raw_version = entry["version"]
+            version = f"v{raw_version}"
             sha256 = entry["sha-256"]
-            url = f"{config['FIRMWARE_ROOT']}/{hardware}/Pebble-{version}-{hardware}.pbz"
-            timestamp = timestamps_map[version]
-            notes = notes_map.get(version)
+            url = f"{config['FIRMWARE_ROOT']}/{hardware}/Pebble-{raw_version}-{hardware}.pbz"
+            timestamp = timestamps_map[raw_version]
+            notes = notes_map.get(raw_version)
             _upsert_firmware(hardware, kind, version, url, sha256, timestamp, notes)
             count += 1
     db.session.commit()
