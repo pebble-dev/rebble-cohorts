@@ -15,18 +15,11 @@ Environment variables:
 ## Local development
 
 ```
-docker run -d --name cohorts-pg \
-    -e POSTGRES_USER=cohorts -e POSTGRES_PASSWORD=cohorts -e POSTGRES_DB=cohorts \
-    -p 55432:5432 postgres:17-alpine
-
-export DATABASE_URL='postgresql+psycopg://cohorts:cohorts@localhost:55432/cohorts'
-export FLASK_APP=cohorts
-
-uv sync
-uv run flask db upgrade       # create tables
-uv run flask import_json      # seed from config.json (one-shot)
-uv run python serve_debug.py  # http://localhost:5000
+docker compose up --build                         # brings up postgres + app; auto-runs flask db upgrade
+docker compose exec app uv run flask import_json  # one-shot seed from config.json (first run only)
 ```
+
+The API is exposed on http://localhost:5000. Postgres data persists in the `cohorts-pg-data` named volume, run `docker compose down -v` if you want a fresh database.
 
 ## Firmware data
 
@@ -37,7 +30,7 @@ Firmware rows live in the `firmwares` table, keyed by `(hardware, kind, version)
 `config.json` is retained only as seed data for the initial import. After first boot, run:
 
 ```
-uv run flask import_json
+docker compose exec app uv run flask import_json
 ```
 
 Re-running is idempotent — rows are upserted by `(hardware, kind, version)`.
@@ -45,7 +38,8 @@ Re-running is idempotent — rows are upserted by `(hardware, kind, version)`.
 ### Adding or updating a firmware
 
 ```
-uv run flask submit_firmware <hardware> <kind> <version> <url> <sha256> \
+docker compose exec app uv run flask submit_firmware \
+    <hardware> <kind> <version> <url> <sha256> \
     [--timestamp <unix>] [--notes "<text>"]
 ```
 
@@ -53,11 +47,10 @@ uv run flask submit_firmware <hardware> <kind> <version> <url> <sha256> \
 
 ### Migrations
 
-`migrations/` is a standard Flask-Migrate / Alembic layout. After editing models:
+`migrations/` is a standard Flask-Migrate / Alembic layout. `docker compose up` auto-applies pending migrations. To generate a new revision after editing models:
 
 ```
-uv run flask db migrate -m "<message>"
-uv run flask db upgrade
+docker compose exec app uv run flask db migrate -m "<message>"
 ```
 
-Migrations are generated against Postgres; run the commands with a Postgres `DATABASE_URL` so the generated revision reflects the target dialect.
+Commit the generated file under `migrations/versions/`. Migrations are authored against Postgres, so generating them via compose (which runs against the compose-managed Postgres) keeps the revisions dialect-accurate.
