@@ -4,31 +4,11 @@ import time
 import click
 from flask import cli as flask_cli
 
+from .memfault import fetch_firmware_command
 from .models import Firmware, db
 from .settings import config
 
 VALID_FW_KINDS = ("normal", "recovery")
-
-
-def _upsert_firmware(hardware, kind, version, url, sha256, timestamp, notes):
-    existing = Firmware.query.filter_by(hardware=hardware, kind=kind, version=version).one_or_none()
-    if existing is None:
-        db.session.add(
-            Firmware(
-                hardware=hardware,
-                kind=kind,
-                version=version,
-                url=url,
-                sha256=sha256,
-                timestamp=timestamp,
-                notes=notes,
-            )
-        )
-    else:
-        existing.url = url
-        existing.sha256 = sha256
-        existing.timestamp = timestamp
-        existing.notes = notes
 
 
 @click.command(name="import_json")
@@ -48,7 +28,7 @@ def import_json_command():
             url = f"{config['FIRMWARE_ROOT']}/{hardware}/Pebble-{raw_version}-{hardware}.pbz"
             timestamp = timestamps_map[raw_version]
             notes = notes_map.get(raw_version)
-            _upsert_firmware(hardware, kind, version, url, sha256, timestamp, notes)
+            Firmware.upsert(hardware, kind, version, url, sha256, timestamp, notes)
             count += 1
     db.session.commit()
     click.echo(f"Imported {count} firmware rows.")
@@ -68,7 +48,7 @@ def submit_firmware_command(hardware, kind, version, url, sha256, timestamp, not
         raise click.BadParameter(f"kind must be one of {VALID_FW_KINDS}, got {kind!r}")
     if timestamp is None:
         timestamp = int(time.time())
-    _upsert_firmware(hardware, kind, version, url, sha256, timestamp, notes)
+    Firmware.upsert(hardware, kind, version, url, sha256, timestamp, notes)
     db.session.commit()
     click.echo(f"Submitted firmware {hardware}/{kind}/{version}.")
 
@@ -76,3 +56,4 @@ def submit_firmware_command(hardware, kind, version, url, sha256, timestamp, not
 def init_app(app):
     app.cli.add_command(import_json_command)
     app.cli.add_command(submit_firmware_command)
+    app.cli.add_command(fetch_firmware_command)
