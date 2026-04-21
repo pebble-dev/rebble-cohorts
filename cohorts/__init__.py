@@ -54,8 +54,8 @@ def generate_fw():
     # pull these all out for reference even though we don't use them all right now.
     hardware = request.args["hardware"]
     mobile_platform = request.args["mobilePlatform"]
-    mobile_version = request.args["mobileVersion"]
-    mobile_hardware = request.args["mobileHardware"]
+    mobile_version = request.args["mobileVersion"]  # noqa: F841
+    mobile_hardware = request.args["mobileHardware"]  # noqa: F841
     pebble_app_version = request.args["pebbleAppVersion"]
 
     beeline.add_context_field("user.hardware", hardware)
