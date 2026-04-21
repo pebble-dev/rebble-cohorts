@@ -3,6 +3,7 @@ from beeline.middleware.flask import HoneyMiddleware
 from flask import Flask
 
 from .api import init_app as init_api
+from .cli import init_app as init_cli
 from .models import init_app as init_models
 from .settings import config
 
@@ -15,3 +16,4 @@ if app.config["HONEYCOMB_KEY"]:
 
 init_models(app)
 init_api(app)
+init_cli(app)
