@@ -23,7 +23,9 @@ The API is exposed on http://localhost:5000. Postgres data persists in the `coho
 
 ## Firmware data
 
-Firmware rows live in the `firmwares` table, keyed by `(hardware, kind, version)`. `/cohort?select=fw&hardware=<hw>` returns the latest row per `kind` (`normal` / `recovery`) by `timestamp` descending. Multiple versions per `(hardware, kind)` are allowed so rollback works by submitting an older version with a newer timestamp.
+Firmware rows live in the `firmwares` table, keyed by `(hardware, kind, version)`. Multiple versions per `(hardware, kind)` are allowed so rollback works by submitting an older version with a newer timestamp — `/cohort?select=fw` always returns the latest row per requested kind by `timestamp` descending.
+
+By default `/cohort?select=fw&hardware=<hw>` returns only `normal`. Pass `&includeRecovery=true` to additionally include the latest `recovery` row; only the literal string `true` is recognized, anything else (including absent) is treated as false. If none of the requested kinds yield a row, `/cohort` responds 400.
 
 ### Seeding from config.json
 
