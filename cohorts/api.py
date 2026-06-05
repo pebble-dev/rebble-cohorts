@@ -1,7 +1,8 @@
 from functools import wraps
 
 import beeline
-from beeline.patch import requests
+import beeline.patch.requests  # noqa: F401 - needed in this order to monkeypatch requests
+import requests
 from flask import Blueprint, abort, current_app, jsonify, request
 
 from .models import Firmware
