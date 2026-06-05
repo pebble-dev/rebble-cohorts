@@ -20,6 +20,10 @@ dependencies = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.uv]
+required-version = ">=0.9.17"
+exclude-newer = "3 days"
+
 [tool.ruff]
 line-length = 100
 
