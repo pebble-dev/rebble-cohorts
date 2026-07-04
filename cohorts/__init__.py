@@ -3,6 +3,8 @@ from beeline.middleware.flask import HoneyMiddleware
 import beeline.propagation.w3c as w3c
 from flask import Flask
 
+import os
+
 from .api import init_app as init_api
 from .cli import init_app as init_cli
 from .models import init_app as init_models
