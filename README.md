@@ -1,5 +1,7 @@
 # rebble-cohorts
-cohorts.rebble.io: The Rebble cohorts API
+cohorts.rebble.io: The Rebble cohorts API. It handles firmware delivery.
+
+For archival, use `/cohort?select=fw-all`, which returns a list of all stored firmware.
 
 ## Configuration
 
@@ -8,9 +10,14 @@ Environment variables:
 | Variable | Required | Default | Purpose |
 | --- | --- | --- | --- |
 | `DATABASE_URL` | yes | — | SQLAlchemy DB URL, e.g. `postgresql+psycopg://user:pw@host:5432/cohorts` |
-| `FIRMWARE_ROOT` | no | `https://binaries.rebble.io/fw` | Base URL used by `import_json` to build `.pbz` URLs |
+| `FIRMWARE_ROOT` | no | `https://binaries.rebble.io/fw` | Base URL used by `import_json` and `fetch_firmware` to build `.pbz` URLs |
 | `HONEYCOMB_KEY` | no | — | Honeycomb write key; beeline disabled if unset |
 | `REBBLE_AUTH` | no | — | Rebble auth service URL; if unset, `Authorization` headers on `/cohort` are ignored |
+| `MEMFAULT_TOKEN` | for `fetch_firmware` | — | Memfault project key |
+| `AWS_ACCESS_KEY` / `AWS_SECRET_KEY` | for `fetch_firmware` | `cohorts` / `cohortscohorts` | S3 creds for re-uploading firmware blobs |
+| `S3_BUCKET` | for `fetch_firmware` | `rebble-binaries` | Target bucket |
+| `S3_PATH` | no | `fw/` | Key prefix inside `S3_BUCKET` (must align with the tail of `FIRMWARE_ROOT`) |
+| `S3_ENDPOINT` | no | `http://s3:9000` | Custom S3 endpoint URL |
 
 ## Local development
 
@@ -21,6 +28,26 @@ docker compose exec app uv run flask import_json  # one-shot seed from config.js
 
 The API is exposed on http://localhost:5000. Postgres data persists in the `cohorts-pg-data` named volume, run `docker compose down -v` if you want a fresh database.
 
+### Optional: fake S3 for upload testing
+
+The `s3` compose profile brings up a local MinIO container plus a one-shot sidecar that pre-creates a `cohorts-binaries` bucket, so the `fetch_firmware` upload path can be exercised without real S3 credentials:
+
+```
+docker compose --profile s3 up -d
+```
+
+Admin console at http://localhost:59001 (user `cohorts`, pass `cohortscohorts`). The S3 API itself is only reachable from inside the compose network at `http://s3:9000` — it is not forwarded to the host.
+
+To point `fetch_firmware` at it, export the matching env on the host before bringing the stack up (or `docker compose --profile s3 restart app` to pick up changes), then run the command as usual:
+
+```
+export MEMFAULT_TOKEN=<your key>
+docker compose --profile s3 restart app
+docker compose --profile s3 exec app uv run flask fetch_firmware
+```
+
+The MinIO bucket contents persist in the `cohorts-s3-data` named volume — `docker compose down -v` clears them along with Postgres.
+
 ## Firmware data
 
 Firmware rows live in the `firmwares` table, keyed by `(hardware, kind, version)`. Multiple versions per `(hardware, kind)` are allowed so rollback works by submitting an older version with a newer timestamp — `/cohort?select=fw` always returns the latest row per requested kind by `timestamp` descending.
@@ -28,6 +55,8 @@ Firmware rows live in the `firmwares` table, keyed by `(hardware, kind, version)
 By default `/cohort?select=fw&hardware=<hw>` returns only `normal`. Pass `&includeRecovery=true` to additionally include the latest `recovery` row; only the literal string `true` is recognized, anything else (including absent) is treated as false. If none of the requested kinds yield a row, `/cohort` responds 400.
 
 ### Seeding from config.json
+
+First, make sure that your `FIRMWARE_ROOT` is set correctly. The URLs are formed on insert, not on request.
 
 `config.json` is retained only as seed data for the initial import. After first boot, run:
 
@@ -39,6 +68,8 @@ Re-running is idempotent — rows are upserted by `(hardware, kind, version)`.
 
 ### Adding or updating a firmware
 
+First, make sure that your `FIRMWARE_ROOT` is set correctly. The URLs are formed on insert, not on request.
+
 ```
 docker compose exec app uv run flask submit_firmware \
     <hardware> <kind> <version> <url> <sha256> \
@@ -46,6 +77,16 @@ docker compose exec app uv run flask submit_firmware \
 ```
 
 `kind` must be `normal` or `recovery`. `--timestamp` defaults to now. Re-running with the same `(hardware, kind, version)` upserts; submitting with a fresh timestamp is how you roll forward or back.
+
+### Fetching CoreDevice firmware from Memfault
+
+First, make sure that your `FIRMWARE_ROOT` is set correctly. The URLs are formed on insert, not on request.
+
+```
+docker compose exec app uv run flask fetch_firmware
+```
+
+Checks Memfault's `releases/latest` for each CoreDevice hardware (asterix, obelix_*, getafix_*, obelix_bb*), skips versions already recorded, and for each new one: streams the `.pbz` down while hashing it, uploads it to S3 at `{S3_PATH}{hardware}/Pebble-{version}-{hardware}.pbz`, and upserts a `normal` row with the resulting `{FIRMWARE_ROOT}/…` URL and the computed sha256. Idempotent and safe to run from cron. Requires `MEMFAULT_TOKEN`, `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`, and `S3_BUCKET` in the environment (docker-compose forwards these from the host). Supports `--token`.
 
 ### Migrations
 
